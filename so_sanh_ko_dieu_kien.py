@@ -122,3 +122,59 @@ def lay_phan_tu_duy_nhat(danh_sach):
 danh_sach = [1, 2, 2, 3, 4, 4, 5]
 print(f"Các phần tử duy nhất trong danh sách: {lay_phan_tu_duy_nhat(danh_sach)}")
 
+
+# CARO 9X9
+
+# Chương trình cờ caro 9x9
+
+def create_board(size):
+    return [[' ' for _ in range(size)] for _ in range(size)]
+
+def print_board(board):
+    print("  " + " ".join([str(i) for i in range(len(board))]))
+    for idx, row in enumerate(board):
+        print(idx, "|", " ".join(row))
+
+def check_winner(board, player):
+    size = len(board)
+    # Kiểm tra hàng ngang, hàng dọc và đường chéo
+    for i in range(size):
+        for j in range(size):
+            if j <= size - 5 and all(board[i][j + k] == player for k in range(5)):
+                return True
+            if i <= size - 5 and all(board[i + k][j] == player for k in range(5)):
+                return True
+            if i <= size - 5 and j <= size - 5 and all(board[i + k][j + k] == player for k in range(5)):
+                return True
+            if i >= 4 and j <= size - 5 and all(board[i - k][j + k] == player for k in range(5)):
+                return True
+    return False
+
+def main():
+    size = 9
+    board = create_board(size)
+    current_player = 'X'
+
+    for turn in range(size * size):
+        print_board(board)
+        print(f"Lượt của người chơi {current_player}:")
+        row, col = map(int, input("Nhập hàng và cột (cách nhau bởi dấu cách, từ 0 đến 8): ").split())
+
+        if board[row][col] != ' ':
+            print("Ô này đã có quân cờ, hãy chọn ô khác!")
+            continue
+
+        board[row][col] = current_player
+
+        if check_winner(board, current_player):
+            print_board(board)
+            print(f"Chúc mừng! Người chơi {current_player} đã thắng!")
+            break
+
+        current_player = 'O' if current_player == 'X' else 'X'
+    else:
+        print("Trò chơi kết thúc! Hòa!")
+
+if __name__ == "__main__":
+    main()
+

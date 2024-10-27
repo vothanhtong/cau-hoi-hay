@@ -179,3 +179,129 @@ def main():
 if __name__ == "__main__":
     main()
 
+
+ ### **Đề bài phỏng vấn Python**
+
+# #### **Câu 1: Kiểm tra chuỗi đối xứng (Palindrome)**
+# Viết một hàm kiểm tra xem một chuỗi có phải là chuỗi đối xứng (palindrome) hay không. Chuỗi đối xứng là chuỗi có thể đọc xuôi và ngược đều giống nhau, bỏ qua các ký tự không phải chữ và không phân biệt chữ hoa hay chữ thường.
+
+# - **Đầu vào**: Một chuỗi `s`.
+# - **Đầu ra**: Trả về `True` nếu chuỗi là palindrome, ngược lại trả về `False`.
+
+# **Ví dụ**:
+# ```python
+# Input: "A man, a plan, a canal: Panama"
+# Output: True
+
+# Input: "race a car"
+# Output: False
+# ```
+
+# #### **Câu 2: Đếm số lần xuất hiện các phần tử**
+# Viết một hàm nhận một danh sách số nguyên và trả về danh sách chứa mỗi số cùng với số lần xuất hiện của nó, theo thứ tự giảm dần của tần suất.
+
+# - **Đầu vào**: Danh sách các số nguyên `nums`.
+# - **Đầu ra**: Danh sách chứa các tuple, mỗi tuple là một phần tử của danh sách và số lần xuất hiện của nó, được sắp xếp theo thứ tự giảm dần của tần suất.
+
+# **Ví dụ**:
+# ```python
+# Input: [1, 1, 2, 3, 3, 3, 4]
+# Output: [(3, 3), (1, 2), (2, 1), (4, 1)]
+# ```
+
+# #### **Câu 3: Lập trình đệ quy tính dãy Fibonacci**
+# Viết hàm tính giá trị của số Fibonacci thứ `n` bằng đệ quy. Số Fibonacci thứ `n` được xác định như sau:
+# - `F(0) = 0`
+# - `F(1) = 1`
+# - `F(n) = F(n-1) + F(n-2)` với `n >= 2`
+
+# **Ví dụ**:
+# ```python
+# Input: 5
+# Output: 5  # F(5) = 5
+# ```
+
+# #### **Câu 4: Tìm số lớn thứ hai trong danh sách**
+# Viết một hàm nhận một danh sách số nguyên và tìm số lớn thứ hai trong danh sách. Bạn không được sử dụng hàm sắp xếp có sẵn trong Python (`sort()` hay `sorted()`).
+
+# **Ví dụ**:
+# ```python
+# Input: [10, 20, 4, 45, 99]
+# Output: 45
+# ```
+
+# #### **Câu 5: Đảo ngược một phần của danh sách**
+# Viết một hàm nhận một danh sách và hai chỉ số `start` và `end`. Hàm này sẽ đảo ngược các phần tử trong danh sách từ chỉ số `start` đến chỉ số `end`, bao gồm cả hai chỉ số đó.
+
+# - **Đầu vào**: Danh sách `nums`, số nguyên `start` và `end`.
+# - **Đầu ra**: Danh sách sau khi đảo ngược.
+
+# **Ví dụ**:
+# ```python
+# Input: [1, 2, 3, 4, 5, 6], start=1, end=4
+# Output: [1, 5, 4, 3, 2, 6]
+# ```
+
+# ---
+
+# ### **Lưu ý khi chấm bài**:
+# - Đối với mỗi câu hỏi, hãy kiểm tra cả độ chính xác của thuật toán và hiệu suất của giải pháp.
+# - Ứng viên cần biết cách quản lý lỗi, kiểm tra các trường hợp đầu vào bất hợp lệ, và viết mã rõ ràng, dễ hiểu.
+# - Phần mở rộng có thể hỏi thêm về cách tối ưu hóa (ví dụ: cải tiến bài toán Fibonacci với memoization, hoặc cách tối ưu bài toán tìm số lớn thứ hai).
+
+
+
+# Để tạo thêm một nhánh (branch) trong một tệp Python, chúng ta có thể hiểu "nhánh" ở đây có thể ám chỉ việc thêm **nhánh điều kiện** sử dụng các câu lệnh `if-else` hoặc `elif`. Đây là một trong những cách để chương trình rẽ nhánh logic dựa trên các điều kiện khác nhau.
+
+# Ví dụ: Dưới đây là một đoạn mã Python có nhiều nhánh điều kiện:
+
+# ### Ví dụ thêm nhánh điều kiện trong Python
+
+# ```python
+# def categorize_number(num):
+#     if num > 0:
+#         return "Positive"
+#     elif num < 0:
+#         return "Negative"
+#     else:
+#         return "Zero"
+
+# # Ví dụ kiểm tra
+# print(categorize_number(10))  # Output: "Positive"
+# print(categorize_number(-5))  # Output: "Negative"
+# print(categorize_number(0))   # Output: "Zero"
+# ```
+
+# Trong đoạn mã này, hàm `categorize_number` có 3 nhánh điều kiện:
+# 1. Nếu số lớn hơn 0 thì trả về "Positive".
+# 2. Nếu số nhỏ hơn 0 thì trả về "Negative".
+# 3. Nếu số bằng 0 thì trả về "Zero".
+
+# ### Nếu bạn muốn thêm **"nhánh" về mặt logic hoặc cấu trúc**, ví dụ thêm nhiều điều kiện khác hoặc thay đổi cách chương trình xử lý, bạn có thể thêm `elif` hoặc các khối lệnh điều kiện khác:
+
+# ```python
+# def categorize_number(num):
+#     if num > 0:
+#         if num > 100:
+#             return "Positive and large"
+#         else:
+#             return "Positive"
+#     elif num < 0:
+#         if num < -100:
+#             return "Negative and large"
+#         else:
+#             return "Negative"
+#     else:
+#         return "Zero"
+
+# # Ví dụ kiểm tra
+# print(categorize_number(150))   # Output: "Positive and large"
+# print(categorize_number(50))    # Output: "Positive"
+# print(categorize_number(-150))  # Output: "Negative and large"
+# print(categorize_number(-50))   # Output: "Negative"
+# print(categorize_number(0))     # Output: "Zero"
+# ```
+
+# ### Tổng kết:
+# - Bạn có thể tạo thêm nhánh trong một chương trình Python bằng cách sử dụng các câu lệnh điều kiện như `if`, `elif`, và `else`.
+# - Mỗi nhánh là một con đường khác nhau mà chương trình có thể thực thi dựa trên các điều kiện mà bạn đặt ra.

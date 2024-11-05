@@ -1,24 +1,29 @@
-# - Addition (cộng)
-# - Subtraction (trừ)
-# - Multiplication (nhân)
-# - Division (chia)
+## 1. **Máy tính Cơ bản (Basic Calculator)**
+### Cách 1: Máy tính yêu cầu người dùng nhập lựa chọn và hai số
+# - Mục tiêu: Tạo một máy tính thực hiện các phép toán cơ bản (cộng, trừ, nhân, chia) dựa trên lựa chọn của người dùng.
+# - Chức năng chính:
+#   - Máy tính có bốn hàm cho các phép toán riêng biệt (`add`, `subtract`, `multiply`, `divide`).
+#   - Người dùng nhập lựa chọn cho phép toán và hai số.
+#   - Máy tính sẽ thực hiện phép tính và trả về kết quả.
 
-# CACH 1 ;
-def add(a, b):
+#### Mã nguồn:
+# Định nghĩa các hàm tính toán
+def add(a, b):       # Hàm cộng
     return a + b
 
-def subtract(a, b):
+def subtract(a, b):  # Hàm trừ
     return a - b
 
-def multiply(a, b):
+def multiply(a, b):  # Hàm nhân
     return a * b
 
-def divide(a, b):
+def divide(a, b):    # Hàm chia (kiểm tra nếu mẫu bằng 0)
     if b != 0:
         return a / b
     else:
         return "Không thể chia cho 0"
 
+# Hàm chính để chạy máy tính
 def calculator():
     print("Chọn phép toán:")
     print("1 - Cộng")
@@ -28,11 +33,14 @@ def calculator():
     
     choice = input("Nhập phím (1/2/3/4): ")
     
+    # Kiểm tra lựa chọn của người dùng
     if choice in ['1', '2', '3', '4']:
         try:
+            # Người dùng nhập hai số
             num1 = float(input("Nhập số thứ nhất: "))
             num2 = float(input("Nhập số thứ hai: "))
             
+            # Thực hiện phép toán dựa trên lựa chọn
             if choice == '1':
                 print(f"Kết quả: {num1} + {num2} = {add(num1, num2)}")
             elif choice == '2':
@@ -46,17 +54,22 @@ def calculator():
     else:
         print("Vui lòng chọn một phép toán hợp lệ (1, 2, 3 hoặc 4).")
 
-# Chạy chương trình
+# Chạy chương trình máy tính
 calculator()
 
-# CACH 2:
+### **Cách 2: Máy tính đơn giản với giá trị cố định**
+# - Mục tiêu: Thực hiện phép tính với các giá trị và phép toán cố định, không cần tương tác từ người dùng.
+# - Cách hoạt động: 
+#   - Dùng sẵn các giá trị (`num1 = 10`, `num2 = 5`) và lựa chọn phép toán (`choice = 1`).
+#   - Hiển thị kết quả của phép tính dựa trên giá trị cố định.
+
+#### Mã nguồn:
 def calculator():
-    # Cố định phép toán và các số để chạy thử nghiệm
-    choice = 1  # 1: Cộng, 2: Trừ, 3: Nhân, 4: Chia
+    choice = 1   # Cố định phép toán (1: cộng, 2: trừ, 3: nhân, 4: chia)
     num1 = 10
     num2 = 5
 
-    # Thực hiện phép toán dựa trên lựa chọn
+    # Thực hiện phép toán và hiển thị kết quả
     if choice == 1:
         result = num1 + num2
         operation = "Cộng"
@@ -71,16 +84,20 @@ def calculator():
         operation = "Chia"
     else:
         print("Lựa chọn không hợp lệ!")
-        return
-
-    # Hiển thị kết quả
+        retur
     print(f"Kết quả của phép {operation} giữa {num1} và {num2} là: {result}")
 
 # Chạy chương trình
 calculator()
 
+## 2. Game Đoán Số (Number Guessing Game)
 
-#                 Number Guessing Game
+### Cách 1: Game Đoán Số Cơ Bản
+# - Mục tiêu: Người chơi cố gắng đoán một số ngẫu nhiên trong khoảng từ 1 đến 100.
+# - Cách chơi:
+#   - Máy sẽ chọn một số ngẫu nhiên từ 1 đến 100.
+#   - Người chơi nhập số đoán, máy sẽ trả lời xem số đoán thấp hơn, cao hơn hay đúng với số bí mật.
+#   - Nếu đoán đúng, trò chơi kết thúc và hiển thị số lần đoán.
 import random
 
 def number_guessing_game():
@@ -93,7 +110,6 @@ def number_guessing_game():
 
     while True:
         try:
-            # Người chơi nhập số đoán
             guess = int(input("Nhập số bạn đoán: "))
             attempts += 1
 
@@ -109,13 +125,20 @@ def number_guessing_game():
 
 # Chạy trò chơi
 number_guessing_game()
+### Cách 2: Game Đoán Số với Mức Độ Khó và Điểm Cao Nhất**
+# - Mục tiêu: Người chơi chọn mức độ khó (Dễ, Trung bình, Khó) với số lần đoán khác nhau, và điểm cao nhất được lưu lại.
+# - Cách chơi:
+#   - Người chơi chọn mức độ khó:
+#     - Dễ: 10 lần đoán.
+#     - Trung bình: 7 lần đoán.
+#     - Khó: 5 lần đoán.
+#   - Sau mỗi lượt chơi, máy hiển thị số lần đoán còn lại. Nếu đoán hết lượt mà không đoán đúng, trò chơi kết thúc và tiết lộ số bí mật.
+#   - Điểm cao nhất sẽ được lưu lại khi người chơi đoán đúng với số lần ít nhất.
 
-# C2:
 import random
 
 def number_guessing_game():
-    # Điểm cao nhất ban đầu là vô cực (sẽ cập nhật khi có điểm mới)
-    best_score = float('inf')
+    best_score = float('inf')  # Điểm cao nhất
 
     while True:
         # Chọn mức độ khó
@@ -135,7 +158,6 @@ def number_guessing_game():
             print("Lựa chọn không hợp lệ. Vui lòng chọn lại.")
             continue
         
-        # Tạo số bí mật và đặt lại số lần đoán
         secret_number = random.randint(1, 100)
         attempts = 0
 
@@ -143,7 +165,6 @@ def number_guessing_game():
         
         while attempts < max_attempts:
             try:
-                # Người chơi nhập số đoán
                 guess = int(input("Nhập số bạn đoán: "))
                 attempts += 1
 
@@ -154,27 +175,23 @@ def number_guessing_game():
                 else:
                     print(f"Chúc mừng! Bạn đã đoán đúng số {secret_number} sau {attempts} lần thử.")
                     
-                    # Cập nhật điểm cao nhất
+                    # Cập nhật điểm cao nhất nếu có
                     if attempts < best_score:
                         best_score = attempts
                         print(f"Chúc mừng! Bạn đã đạt kỷ lục mới với {attempts} lần thử.")
 
                     break
 
-                # Thông báo số lần đoán còn lại
                 print(f"Bạn còn {max_attempts - attempts} lần đoán.")
                 
             except ValueError:
                 print("Vui lòng nhập một số hợp lệ.")
         
         else:
-            # Thông báo khi hết lượt đoán
             print(f"Rất tiếc, bạn đã hết lượt đoán. Số bí mật là: {secret_number}")
 
-        # Hiển thị điểm cao nhất
         print(f"\nĐiểm cao nhất hiện tại: {best_score} lần đoán.")
         
-        # Hỏi người chơi có muốn chơi lại không
         play_again = input("\nBạn có muốn chơi lại không? (c/k): ")
         if play_again.lower() != 'c':
             print("Cảm ơn bạn đã chơi trò chơi Đoán Số. Hẹn gặp lại!")
@@ -182,3 +199,5 @@ def number_guessing_game():
 
 # Chạy trò chơi
 number_guessing_game()
+
+

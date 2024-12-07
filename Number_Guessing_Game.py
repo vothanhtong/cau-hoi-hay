@@ -1,4 +1,4 @@
-# 1. Máy tính Cơ bản với Đăng nhập
+import random
 
 # Định nghĩa mật khẩu
 PASSWORD = "12345"
@@ -17,7 +17,7 @@ def login():
     print("Đăng nhập thất bại. Truy cập bị từ chối.")
     return False
 
-# Định nghĩa các hàm tính toán
+# 1. Máy tính Cơ bản với Đăng nhập
 def add(a, b):
     return a + b
 
@@ -64,31 +64,7 @@ def calculator():
     else:
         print("Vui lòng chọn một phép toán hợp lệ (1, 2, 3 hoặc 4).")
 
-# Chạy chương trình máy tính
-calculator()
-
-
 # 2. Game Đoán Số với Đăng nhập
-
-import random
-
-# Định nghĩa mật khẩu
-PASSWORD = "12345"
-
-# Hàm đăng nhập
-def login():
-    attempts = 3  # Số lần nhập sai tối đa
-    while attempts > 0:
-        password = input("Nhập mật khẩu: ")
-        if password == PASSWORD:
-            print("Đăng nhập thành công!")
-            return True
-        else:
-            attempts -= 1
-            print(f"Mật khẩu không đúng! Bạn còn {attempts} lần thử.")
-    print("Đăng nhập thất bại. Truy cập bị từ chối.")
-    return False
-
 def number_guessing_game():
     if not login():
         return  # Kết thúc nếu đăng nhập thất bại
@@ -102,6 +78,7 @@ def number_guessing_game():
         print("3. Khó (5 lần đoán)")
         difficulty = input("Nhập mức độ (1/2/3): ")
         
+        # Xác định số lượt đoán tối đa dựa trên mức độ khó
         if difficulty == '1':
             max_attempts = 10
         elif difficulty == '2':
@@ -112,8 +89,8 @@ def number_guessing_game():
             print("Lựa chọn không hợp lệ. Vui lòng chọn lại.")
             continue
         
-        secret_number = random.randint(1, 100)
-        attempts = 0
+        secret_number = random.randint(1, 100)  # Số bí mật từ 1 đến 100
+        attempts = 0  # Biến đếm số lần đoán
 
         print("\nTôi đã chọn một số từ 1 đến 100. Hãy đoán nó nhé!")
         
@@ -132,7 +109,6 @@ def number_guessing_game():
                     if attempts < best_score:
                         best_score = attempts
                         print(f"Chúc mừng! Bạn đã đạt kỷ lục mới với {attempts} lần thử.")
-
                     break
 
                 print(f"Bạn còn {max_attempts - attempts} lần đoán.")
@@ -150,5 +126,8 @@ def number_guessing_game():
             print("Cảm ơn bạn đã chơi trò chơi Đoán Số. Hẹn gặp lại!")
             break
 
-# Chạy trò chơi
+# Chạy chương trình máy tính
+calculator()
+
+# Chạy trò chơi Đoán Số
 number_guessing_game()

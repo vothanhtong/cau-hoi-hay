@@ -1,65 +1,41 @@
+# Dưới đây là phiên bản rút gọn và tối ưu của mã nguồn:
+
 import re
 
-# Hàm kiểm tra tên tài khoản (phải có ít nhất hai từ, tức là họ và tên)
-def validate_username(username):
-    return len(username.split()) >= 2
+# Kiểm tra tài khoản (ít nhất 2 từ) và mật khẩu (ít nhất 8 ký tự, chứa ký tự đặc biệt)
+def validate(username, password):
+    return len(username.split()) >= 2 and len(password) >= 8 and re.search(r'[^A-Za-z0-9]', password)
 
-# Hàm kiểm tra mật khẩu (phải có ít nhất một ký tự đặc biệt và độ dài tối thiểu là 8 ký tự)
-def validate_password(password):
-    return (len(password) >= 8) and bool(re.search(r'[^A-Za-z0-9]', password))
-
-# Hàm tạo tài khoản
+# Tạo tài khoản
 def create_account():
     while True:
         username = input("Nhập tên tài khoản (phải có họ và tên): ")
-        if not validate_username(username):
-            print("Tên tài khoản phải có họ và tên. Vui lòng nhập lại.")
-            continue
-
-        password = input("Nhập mật khẩu (phải có ít nhất 8 ký tự và chứa ký tự đặc biệt): ")
-        if not validate_password(password):
-            print("Mật khẩu phải chứa ít nhất một ký tự đặc biệt và có độ dài tối thiểu 8 ký tự. Vui lòng nhập lại.")
-            continue
-        
-        # Xác thực mật khẩu bằng cách yêu cầu nhập lại
-        confirm_password = input("Nhập lại mật khẩu để xác nhận: ")
-        if password != confirm_password:
-            print("Mật khẩu không khớp. Vui lòng nhập lại.")
-            continue
-        
-        print("Tài khoản và mật khẩu đã được thiết lập thành công.")
-        return username, password
-
-# Hàm đăng nhập
-def login(username, password):
-    while True:
-        input_username = input("Nhập tên tài khoản: ")
-        input_password = input("Nhập mật khẩu: ")
-        
-        if input_username == username and input_password == password:
-            print("Bạn đã đăng nhập thành công.")
-            break
+        password = input("Nhập mật khẩu (ít nhất 8 ký tự, chứa ký tự đặc biệt): ")
+        if validate(username, password):
+            if password == input("Nhập lại mật khẩu để xác nhận: "):
+                print("Tạo tài khoản thành công.")
+                return username, password
+            else:
+                print("Mật khẩu không khớp. Vui lòng thử lại.")
         else:
-            print("Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại.")
+            print("Tên tài khoản hoặc mật khẩu không hợp lệ. Vui lòng thử lại.")
 
-# Chạy chương trình
+# Đăng nhập
+def login(username, password):
+    while input("Nhập tên tài khoản: ") != username or input("Nhập mật khẩu: ") != password:
+        print("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.")
+    print("Đăng nhập thành công.")
+
+# Chương trình chính
 if __name__ == "__main__":
     print("Thiết lập tài khoản")
-    username, password = create_account()
-    
-    input("Nhấn Enter để tiến hành đăng nhập...")
-    
-    print("Đăng nhập")
-    login(username, password)
+    user, pw = create_account()
+    print("\nĐăng nhập")
+    login(user, pw)
 
 
-# kiểm tra độ dài mật khẩu: Đảm bảo mật khẩu có ít nhất 8 ký tự.
-# Xác thực mật khẩu: Người dùng phải nhập lại mật khẩu để xác nhận rằng họ đã nhập chính xác.
-# Thông báo thành công: Thông báo cho người dùng khi tài khoản và mật khẩu đã được thiết lập thành công.
-# Ghi chú: Đã thêm ghi chú chi tiết để giải thích chức năng của từng phần trong mã.
-# Cách sử dụng chương trình:
-# Chương trình yêu cầu người dùng nhập tên tài khoản và mật khẩu.
-# Tên tài khoản phải có ít nhất hai từ (họ và tên).
-# Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một ký tự đặc biệt.
-# Người dùng phải xác nhận mật khẩu bằng cách nhập lại.
-# Sau khi tạo tài khoản thành công, người dùng có thể đăng nhập bằng tên tài khoản và mật khẩu đã tạo.
+### Điểm tối ưu:
+# 1. **Gộp logic**: Hàm `validate` kiểm tra đồng thời cả tên tài khoản và mật khẩu để tránh lặp code.
+# 2. **Rút gọn thông báo lỗi**: Sử dụng thông báo chung khi tên tài khoản hoặc mật khẩu không hợp lệ.
+# 3. **Giảm nhập liệu không cần thiết**: Tránh lặp lại nhập và kiểm tra trong từng bước riêng lẻ.
+# 4. **Cấu trúc ngắn gọn**: Giữ nguyên chức năng nhưng code được trình bày đơn giản hơn.

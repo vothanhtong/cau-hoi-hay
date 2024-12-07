@@ -51,3 +51,15 @@ if __name__ == "__main__":
     
     print("Đăng nhập")
     login(username, password)
+
+
+# kiểm tra độ dài mật khẩu: Đảm bảo mật khẩu có ít nhất 8 ký tự.
+# Xác thực mật khẩu: Người dùng phải nhập lại mật khẩu để xác nhận rằng họ đã nhập chính xác.
+# Thông báo thành công: Thông báo cho người dùng khi tài khoản và mật khẩu đã được thiết lập thành công.
+# Ghi chú: Đã thêm ghi chú chi tiết để giải thích chức năng của từng phần trong mã.
+# Cách sử dụng chương trình:
+# Chương trình yêu cầu người dùng nhập tên tài khoản và mật khẩu.
+# Tên tài khoản phải có ít nhất hai từ (họ và tên).
+# Mật khẩu phải có ít nhất 8 ký tự và chứa ít nhất một ký tự đặc biệt.
+# Người dùng phải xác nhận mật khẩu bằng cách nhập lại.
+# Sau khi tạo tài khoản thành công, người dùng có thể đăng nhập bằng tên tài khoản và mật khẩu đã tạo.

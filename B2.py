@@ -19,7 +19,7 @@ print(intersection(list1, list2))  # Kết quả: [4, 5]
 def is_prime(n):
     if n <= 1:
         return False
-    for i in range(2, int(n0.5) + 1):
+    # for i in range(2, int(n0.5) + 1):
         if n % i == 0:
             return False
     return True
@@ -45,6 +45,4 @@ def shuffle_list(lst):
 # Ví dụ sử dụng
 my_list = [1, 2, 3, 4, 5]
 print(shuffle_list(my_list))  # Kết quả: danh sách đã xáo trộn
-
-
 # Giải thích: Hàm sử dụng thuật toán xáo trộn Fisher-Yates. Nó lặp qua danh sách từ cuối lên đầu và hoán đổi từng phần tử với một phần tử ngẫu nhiên trước đó, đảm bảo rằng mọi thứ trong danh sách có cơ hội được xáo trộn đều.

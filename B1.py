@@ -69,7 +69,6 @@ print(f"Danh sách sau khi sắp xếp: {arr}")
 
 
 ### Tình huống áp dụng
-- Bubble Sort hiệu quả cho danh sách nhỏ hoặc gần như đã sắp xếp.
-- Đối với danh sách lớn hoặc dữ liệu ngẫu nhiên, các thuật toán khác như Quick Sort, Merge Sort sẽ hiệu quả hơn.
+# - Bubble Sort hiệu quả cho danh sách nhỏ hoặc gần như đã sắp xếp.
+# - Đối với danh sách lớn hoặc dữ liệu ngẫu nhiên, các thuật toán khác như Quick Sort, Merge Sort sẽ hiệu quả hơn.
 
-Hy vọng giải thích này làm rõ và dễ hiểu hơn về thuật toán Bubble Sort! 🚀

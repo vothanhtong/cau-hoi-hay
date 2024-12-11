@@ -1,41 +1,69 @@
-# Dưới đây là phiên bản rút gọn và tối ưu của mã nguồn:
-
 import re
 
-# Kiểm tra tài khoản (ít nhất 2 từ) và mật khẩu (ít nhất 8 ký tự, chứa ký tự đặc biệt)
+# Kiểm tra tài khoản và mật khẩu
 def validate(username, password):
-    return len(username.split()) >= 2 and len(password) >= 8 and re.search(r'[^A-Za-z0-9]', password)
+    """
+    Kiểm tra tính hợp lệ của tên tài khoản và mật khẩu.
+    
+    Args:
+        username (str): Tên tài khoản.
+        password (str): Mật khẩu.
+
+    Returns:
+        bool: True nếu hợp lệ, False nếu không.
+    """
+    return (
+        len(username.split()) >= 2 and
+        len(password) >= 8 and
+        re.search(r'[^A-Za-z0-9]', password)
+    )
 
 # Tạo tài khoản
 def create_account():
+    """
+    Tạo một tài khoản mới bằng cách nhập tên tài khoản và mật khẩu.
+    
+    Returns:
+        tuple: Tên tài khoản và mật khẩu hợp lệ.
+    """
     while True:
-        username = input("Nhập tên tài khoản (phải có họ và tên): ")
-        password = input("Nhập mật khẩu (ít nhất 8 ký tự, chứa ký tự đặc biệt): ")
-        if validate(username, password):
-            if password == input("Nhập lại mật khẩu để xác nhận: "):
-                print("Tạo tài khoản thành công.")
-                return username, password
-            else:
-                print("Mật khẩu không khớp. Vui lòng thử lại.")
-        else:
+        username = input("Nhập tên tài khoản (phải có họ và tên): ").strip()
+        password = input("Nhập mật khẩu (ít nhất 8 ký tự, chứa ký tự đặc biệt): ").strip()
+        
+        if not validate(username, password):
             print("Tên tài khoản hoặc mật khẩu không hợp lệ. Vui lòng thử lại.")
+            continue
+        
+        confirm_password = input("Nhập lại mật khẩu để xác nhận: ").strip()
+        if password != confirm_password:
+            print("Mật khẩu không khớp. Vui lòng thử lại.")
+        else:
+            print("Tạo tài khoản thành công!")
+            return username, password
 
 # Đăng nhập
 def login(username, password):
-    while input("Nhập tên tài khoản: ") != username or input("Nhập mật khẩu: ") != password:
-        print("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.")
-    print("Đăng nhập thành công.")
+    """
+    Đăng nhập bằng cách kiểm tra tên tài khoản và mật khẩu.
+    
+    Args:
+        username (str): Tên tài khoản đã đăng ký.
+        password (str): Mật khẩu đã đăng ký.
+    """
+    while True:
+        entered_username = input("Nhập tên tài khoản: ").strip()
+        entered_password = input("Nhập mật khẩu: ").strip()
+        
+        if entered_username == username and entered_password == password:
+            print("Đăng nhập thành công!")
+            break
+        else:
+            print("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.")
 
 # Chương trình chính
 if __name__ == "__main__":
-    print("Thiết lập tài khoản")
+    print("=== Thiết lập tài khoản ===")
     user, pw = create_account()
-    print("\nĐăng nhập")
+    
+    print("\n=== Đăng nhập ===")
     login(user, pw)
-
-
-### Điểm tối ưu:
-# 1. **Gộp logic**: Hàm `validate` kiểm tra đồng thời cả tên tài khoản và mật khẩu để tránh lặp code.
-# 2. **Rút gọn thông báo lỗi**: Sử dụng thông báo chung khi tên tài khoản hoặc mật khẩu không hợp lệ.
-# 3. **Giảm nhập liệu không cần thiết**: Tránh lặp lại nhập và kiểm tra trong từng bước riêng lẻ.
-# 4. **Cấu trúc ngắn gọn**: Giữ nguyên chức năng nhưng code được trình bày đơn giản hơn.

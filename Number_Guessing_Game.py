@@ -2,49 +2,91 @@ import random
 
 PASSWORD = "12345"
 
+# Đăng nhập
 def login():
-    return any(input(f"Nhập mật khẩu (còn {3 - i} lần): ") == PASSWORD for i in range(3)) or print("Truy cập bị từ chối.")
+    for attempt in range(3):
+        remaining = 2 - attempt
+        if input(f"Nhập mật khẩu (còn {remaining + 1} lần): ") == PASSWORD:
+            print("Đăng nhập thành công!")
+            return True
+        print("Sai mật khẩu.")
+    print("Truy cập bị từ chối.")
+    return False
 
+# Máy tính
 def calculator():
-    ops = {'1': ('+', lambda a, b: a + b), 
-           '2': ('-', lambda a, b: a - b), 
-           '3': ('*', lambda a, b: a * b), 
-           '4': ('/', lambda a, b: a / b if b else "Lỗi chia 0")}
+    operations = {
+        '1': ('+', lambda a, b: a + b),
+        '2': ('-', lambda a, b: a - b),
+        '3': ('*', lambda a, b: a * b),
+        '4': ('/', lambda a, b: a / b if b != 0 else "Lỗi chia 0")
+    }
     choice = input("Chọn phép toán (1:+, 2:-, 3:*, 4:/): ")
-    if choice in ops:
+    if choice in operations:
         try:
             a, b = map(float, input("Nhập hai số cách nhau khoảng trắng: ").split())
-            print(f"Kết quả: {a} {ops[choice][0]} {b} = {ops[choice][1](a, b)}")
+            op_symbol, op_func = operations[choice]
+            result = op_func(a, b)
+            print(f"Kết quả: {a} {op_symbol} {b} = {result}")
         except ValueError:
-            print("Dữ liệu không hợp lệ.")
+            print("Dữ liệu không hợp lệ. Vui lòng nhập lại.")
     else:
         print("Lựa chọn không hợp lệ.")
 
+# Trò chơi đoán số
 def number_guessing_game():
-    max_attempts = {'1': 10, '2': 7, '3': 5}.get(input("Chọn độ khó (1: Dễ, 2: TB, 3: Khó): "))
-    if not max_attempts: 
-        return print("Lựa chọn không hợp lệ.")
+    difficulty_levels = {
+        '1': 10,  # Dễ
+        '2': 7,   # Trung bình
+        '3': 5    # Khó
+    }
+    difficulty = input("Chọn độ khó (1: Dễ, 2: TB, 3: Khó): ")
+    max_attempts = difficulty_levels.get(difficulty)
+    
+    if not max_attempts:
+        print("Lựa chọn không hợp lệ.")
+        return
+    
     secret = random.randint(1, 100)
     print("Tôi đã chọn số từ 1-100, hãy đoán!")
-    for i in range(1, max_attempts + 1):
+    
+    for attempt in range(1, max_attempts + 1):
         try:
-            guess = int(input(f"Thử lần {i}: "))
+            guess = int(input(f"Thử lần {attempt}: "))
             if guess == secret:
-                return print(f"Đúng! Số là {secret}, bạn đoán {i} lần.")
+                print(f"Chúc mừng! Bạn đã đoán đúng số {secret} sau {attempt} lần thử.")
+                return
             print("Quá lớn!" if guess > secret else "Quá nhỏ!")
         except ValueError:
-            print("Vui lòng nhập số hợp lệ.")
-    print(f"Hết lượt! Số là {secret}.")
+            print("Vui lòng nhập một số hợp lệ.")
+    
+    print(f"Hết lượt! Số bí mật là {secret}.")
+
+# Chương trình chính
+def main():
+    print("=== Hệ thống đăng nhập ===")
+    if not login():
+        return
+    
+    while True:
+        print("\nMenu:")
+        print("1: Máy tính")
+        print("2: Trò chơi đoán số")
+        print("3: Thoát")
+        choice = input("Chọn một tùy chọn: ")
+        
+        actions = {
+            '1': calculator,
+            '2': number_guessing_game
+        }
+        if choice == '3':
+            print("Tạm biệt!")
+            break
+        action = actions.get(choice)
+        if action:
+            action()
+        else:
+            print("Lựa chọn không hợp lệ.")
 
 if __name__ == "__main__":
-    if login():
-        while (choice := input("\n1: Máy tính, 2: Đoán số, 3: Thoát. Chọn: ")) != '3':
-            {'1': calculator, '2': number_guessing_game}.get(choice, lambda: print("Lựa chọn không hợp lệ."))()
-        print("Tạm biệt!")
-
-### Sửa đổi:
-# 1. **Sửa lỗi phép nhân**: Thêm `'*'` vào từ điển `ops`.
-# 2. **Tối ưu xử lý lỗi**:
-#    - Bảo đảm kiểm tra lựa chọn phép toán (`choice`) và mức độ khó (`difficulty`) đầy đủ.
-#    - Thông báo lỗi ngắn gọn nhưng rõ ràng.
-# 3. **Tính năng không đổi**: Mã vẫn ngắn gọn, dễ đọc, và có thể mở rộng thêm tính năng khi cần.
+    main()

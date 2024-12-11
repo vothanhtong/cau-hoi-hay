@@ -4,7 +4,6 @@
 # - Sau mỗi vòng lặp, phần tử lớn nhất (hoặc nhỏ nhất) được đặt đúng vị trí cuối cùng.
 # - Tiếp tục lặp cho đến khi danh sách được sắp xếp.
 
-
 #### 2. Tính chất
 # - Thứ tự: Sắp xếp tăng dần (hoặc giảm dần nếu tùy chỉnh điều kiện).
 # - Độ phức tạp thời gian:
@@ -23,7 +22,6 @@
 # 2. Kết thúc
 
 
-
 #### 4. Mã Python
 
 def bubble_sort(arr):
@@ -37,8 +35,6 @@ def bubble_sort(arr):
         print(f"Bước {i + 1}: {arr}")  # Hiển thị danh sách mỗi vòng
         if not swapped:  # Nếu không có hoán đổi, dừng thuật toán
             break
-
-
 
 
 #### 5. Minh họa với ví dụ
@@ -60,14 +56,11 @@ print(f"Danh sách sau khi sắp xếp: {arr}")
 # Danh sách sau khi sắp xếp: [11, 12, 22, 25, 34, 64, 90]
 
 
-
-
 #### 6. Phân tích từng bước
 # 1. Bước 1: Phần tử lớn nhất (90) "nổi lên" vị trí cuối.
 #    - Hoán đổi 64 ↔ 34, 34 ↔ 25, ..., cuối cùng 64 ↔ 90.
 # 2. Bước 2: Phần tử lớn thứ hai (64) "nổi lên" trước 90.
 #    - Lặp lại cho đến khi danh sách sắp xếp xong.
-
 
 
 #### 7. Cải tiến
@@ -76,8 +69,6 @@ print(f"Danh sách sau khi sắp xếp: {arr}")
 #   - Giảm số lần duyệt không cần thiết.
 # - Kết quả cải tiến:
 #   - Trường hợp tốt nhất: \(O(n)\).
-
-
 
 #### 8. Tình huống áp dụng
 # - Danh sách nhỏ hoặc gần như đã sắp xếp: Bubble Sort hoạt động tốt, dễ triển khai.

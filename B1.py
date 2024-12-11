@@ -1,35 +1,41 @@
-### Cải tiến mã Python với lựa chọn tăng/giảm dần
-#### Thêm tính năng:
-# - Cho phép người dùng chọn tăng dần hoặc giảm dần bằng tham số `reverse`.
-# - Sử dụng cú pháp Pythonic để ngắn gọn hơn.
-
-
 def bubble_sort(arr, reverse=False):
+    """
+    Sắp xếp danh sách bằng thuật toán Bubble Sort.
+
+    Tham số:
+        arr (list): Danh sách cần sắp xếp.
+        reverse (bool): True nếu sắp xếp giảm dần, False nếu sắp xếp tăng dần.
+
+    Trả về:
+        list: Danh sách đã được sắp xếp.
+    """
     n = len(arr)
     for i in range(n - 1):
         swapped = False
-        for j in range(n - i - 1):
-            if (arr[j] > arr[j + 1]) ^ reverse:  # XOR để xác định hướng
+        # Sử dụng enumerate để rõ ràng và tối ưu
+        for j, _ in enumerate(arr[:n - i - 1]):
+            if (arr[j] > arr[j + 1]) ^ reverse:  # XOR để xác định hướng sắp xếp
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
                 swapped = True
         if not swapped:  # Dừng sớm nếu không có hoán đổi
             break
     return arr
 
+# Minh họa sử dụng
+if __name__ == "__main__":
+    arr = [64, 34, 25, 12, 22, 11, 90]
 
+    # Sắp xếp tăng dần
+    print("Tăng dần:", bubble_sort(arr.copy()))
 
-### Minh họa sử dụng
+    # Sắp xếp giảm dần
+    print("Giảm dần:", bubble_sort(arr.copy(), reverse=True))
 
-arr = [64, 34, 25, 12, 22, 11, 90]
+    # Kiểm tra danh sách rỗng
+    print("Danh sách rỗng:", bubble_sort([]))
 
-# Sắp xếp tăng dần
-print("Tăng dần:", bubble_sort(arr.copy()))
+    # Kiểm tra danh sách một phần tử
+    print("Danh sách một phần tử:", bubble_sort([42]))
 
-# Sắp xếp giảm dần
-print("Giảm dần:", bubble_sort(arr.copy(), reverse=True))
-
-
-#### Kết quả
-
-# Tăng dần: [11, 12, 22, 25, 34, 64, 90]
-# Giảm dần: [90, 64, 34, 25, 22, 12, 11]
+    # Kiểm tra danh sách có giá trị giống nhau
+    print("Danh sách giá trị giống nhau:", bubble_sort([5, 5, 5, 5]))

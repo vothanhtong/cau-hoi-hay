@@ -28,7 +28,6 @@ def is_prime(n):
 # - Tự tạo hàm sinh số ngẫu nhiên để giảm phụ thuộc vào thư viện bên ngoài.
 # - Đảm bảo mỗi phần tử đều có xác suất như nhau.
 
-
 import time
 
 def custom_random(seed=None):
@@ -47,7 +46,6 @@ def shuffle_list(lst):
 #### Nâng cấp:
 # - Thêm khả năng sắp xếp tăng dần hoặc giảm dần (`reverse`).
 # - Kết hợp kiểu Pythonic để viết ngắn gọn hơn.
-
 
 def bubble_sort(arr, reverse=False):
     n = len(arr)

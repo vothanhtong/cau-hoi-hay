@@ -1,4 +1,63 @@
-### Câu hỏi 1: Giao điểm của hai danh sách
+import re
+import time
+
+def validate(username, password):
+    """
+    Kiểm tra tính hợp lệ của tên tài khoản và mật khẩu.
+    
+    Args:
+        username (str): Tên tài khoản.
+        password (str): Mật khẩu.
+
+    Returns:
+        bool: True nếu hợp lệ, False nếu không.
+    """
+    return (
+        len(username.split()) >= 2 and
+        len(password) >= 8 and
+        re.search(r'[^A-Za-z0-9]', password)
+    )
+
+def create_account():
+    """
+    Tạo một tài khoản mới bằng cách nhập tên tài khoản và mật khẩu.
+    
+    Returns:
+        tuple: Tên tài khoản và mật khẩu hợp lệ.
+    """
+    while True:
+        username = input("Nhập tên tài khoản (phải có họ và tên): ").strip()
+        password = input("Nhập mật khẩu (ít nhất 8 ký tự, chứa ký tự đặc biệt): ").strip()
+        
+        if not validate(username, password):
+            print("Tên tài khoản hoặc mật khẩu không hợp lệ. Vui lòng thử lại.")
+            continue
+        
+        confirm_password = input("Nhập lại mật khẩu để xác nhận: ").strip()
+        if password != confirm_password:
+            print("Mật khẩu không khớp. Vui lòng thử lại.")
+        else:
+            print("Tạo tài khoản thành công!")
+            return username, password
+
+def login(username, password):
+    """
+    Đăng nhập bằng cách kiểm tra tên tài khoản và mật khẩu.
+    
+    Args:
+        username (str): Tên tài khoản đã đăng ký.
+        password (str): Mật khẩu đã đăng ký.
+    """
+    while True:
+        entered_username = input("Nhập tên tài khoản: ").strip()
+        entered_password = input("Nhập mật khẩu: ").strip()
+        
+        if entered_username == username and entered_password == password:
+            print("Đăng nhập thành công!")
+            break
+        else:
+            print("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.")
+
 def intersection(list1, list2):
     """
     Tìm giao điểm của hai danh sách.
@@ -14,7 +73,6 @@ def intersection(list1, list2):
         raise TypeError("Both inputs must be lists")
     return sorted(set(list1).intersection(list2))
 
-### Câu hỏi 2: Kiểm tra số nguyên tố
 def is_prime(n):
     """
     Kiểm tra một số có phải là số nguyên tố hay không.
@@ -37,9 +95,6 @@ def is_prime(n):
             return False
         i += 6
     return True
-
-### Câu hỏi 3: Xáo trộn danh sách
-import time
 
 def custom_random(seed=None):
     """
@@ -71,7 +126,6 @@ def shuffle_list(lst):
         lst[i], lst[j] = lst[j], lst[i]
     return lst
 
-### Câu hỏi 4: Thuật toán Bubble Sort
 def bubble_sort(arr, reverse=False):
     """
     Sắp xếp danh sách bằng thuật toán Bubble Sort.
@@ -94,9 +148,17 @@ def bubble_sort(arr, reverse=False):
             break
     return arr
 
-### Minh họa
-if __name__ == "__main__":
-    print("Hello, World!")  # Minh họa chạy chương trình
+def main():
+    """
+    Chương trình chính để quản lý tài khoản và đăng nhập.
+    """
+    print("=== Thiết lập tài khoản ===")
+    user, pw = create_account()
+    
+    print("\n=== Đăng nhập ===")
+    login(user, pw)
+
+    print("\n=== Các chức năng khác ===")
 
     # Câu hỏi 1: Giao điểm
     list1 = [1, 2, 3, 4, 5]
@@ -115,3 +177,6 @@ if __name__ == "__main__":
     arr = [64, 34, 25, 12, 22, 11, 90]
     print("Tăng dần:", bubble_sort(arr.copy()))
     print("Giảm dần:", bubble_sort(arr.copy(), reverse=True))
+
+if __name__ == "__main__":
+    main()

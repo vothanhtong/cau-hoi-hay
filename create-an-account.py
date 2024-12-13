@@ -1,6 +1,5 @@
 import re
 
-# Kiểm tra tài khoản và mật khẩu
 def validate(username, password):
     """
     Kiểm tra tính hợp lệ của tên tài khoản và mật khẩu.
@@ -18,7 +17,6 @@ def validate(username, password):
         re.search(r'[^A-Za-z0-9]', password)
     )
 
-# Tạo tài khoản
 def create_account():
     """
     Tạo một tài khoản mới bằng cách nhập tên tài khoản và mật khẩu.
@@ -41,7 +39,6 @@ def create_account():
             print("Tạo tài khoản thành công!")
             return username, password
 
-# Đăng nhập
 def login(username, password):
     """
     Đăng nhập bằng cách kiểm tra tên tài khoản và mật khẩu.
@@ -60,10 +57,15 @@ def login(username, password):
         else:
             print("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.")
 
-# Chương trình chính
-if __name__ == "__main__":
+def main():
+    """
+    Chương trình chính để quản lý tài khoản và đăng nhập.
+    """
     print("=== Thiết lập tài khoản ===")
     user, pw = create_account()
     
     print("\n=== Đăng nhập ===")
     login(user, pw)
+
+if __name__ == "__main__":
+    main()

@@ -3,39 +3,33 @@ def bubble_sort(arr, reverse=False):
     Sắp xếp danh sách bằng thuật toán Bubble Sort.
 
     Tham số:
-        arr (list): Danh sách cần sắp xếp.
+        arr (list): Danh sách cần sắp xếp (không thay đổi).
         reverse (bool): True nếu sắp xếp giảm dần, False nếu sắp xếp tăng dần.
 
     Trả về:
         list: Danh sách đã được sắp xếp.
     """
+    arr = arr[:]  # Tạo bản sao để bảo vệ danh sách gốc
     n = len(arr)
     for i in range(n - 1):
         swapped = False
-        # Sử dụng enumerate để rõ ràng và tối ưu
-        for j, _ in enumerate(arr[:n - i - 1]):
-            if (arr[j] > arr[j + 1]) ^ reverse:  # XOR để xác định hướng sắp xếp
+        for j in range(n - i - 1):
+            if (arr[j] > arr[j + 1]) ^ reverse:  # XOR để kiểm tra hướng sắp xếp
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
                 swapped = True
-        if not swapped:  # Dừng sớm nếu không có hoán đổi
+        if not swapped:
             break
     return arr
 
 # Minh họa sử dụng
 if __name__ == "__main__":
-    arr = [64, 34, 25, 12, 22, 11, 90]
+    test_cases = [
+        ([64, 34, 25, 12, 22, 11, 90], False, "Tăng dần"),
+        ([64, 34, 25, 12, 22, 11, 90], True, "Giảm dần"),
+        ([], False, "Danh sách rỗng"),
+        ([42], False, "Danh sách một phần tử"),
+        ([5, 5, 5, 5], False, "Danh sách giá trị giống nhau"),
+    ]
 
-    # Sắp xếp tăng dần
-    print("Tăng dần:", bubble_sort(arr.copy()))
-
-    # Sắp xếp giảm dần
-    print("Giảm dần:", bubble_sort(arr.copy(), reverse=True))
-
-    # Kiểm tra danh sách rỗng
-    print("Danh sách rỗng:", bubble_sort([]))
-
-    # Kiểm tra danh sách một phần tử
-    print("Danh sách một phần tử:", bubble_sort([42]))
-
-    # Kiểm tra danh sách có giá trị giống nhau
-    print("Danh sách giá trị giống nhau:", bubble_sort([5, 5, 5, 5]))
+    for arr, reverse, desc in test_cases:
+        print(f"{desc}: {bubble_sort(arr, reverse)}")

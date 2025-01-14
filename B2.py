@@ -1,5 +1,10 @@
 import re
 import time
+import hashlib
+
+def hash_password(password):
+    """Mã hóa mật khẩu."""
+    return hashlib.sha256(password.encode()).hexdigest()
 
 def validate(username, password):
     """Kiểm tra tính hợp lệ của tên tài khoản và mật khẩu."""
@@ -17,16 +22,16 @@ def create_account():
         if validate(username, password):
             if password == input("Nhập lại mật khẩu để xác nhận: ").strip():
                 print("Tạo tài khoản thành công!")
-                return username, password
+                return username, hash_password(password)
             print("Mật khẩu không khớp. Vui lòng thử lại.")
         else:
             print("Tên tài khoản hoặc mật khẩu không hợp lệ. Vui lòng thử lại.")
 
-def login(username, password):
+def login(username, hashed_password):
     """Đăng nhập."""
     while True:
         if input("Nhập tên tài khoản: ").strip() == username and \
-           input("Nhập mật khẩu: ").strip() == password:
+           hash_password(input("Nhập mật khẩu: ").strip()) == hashed_password:
             print("Đăng nhập thành công!")
             break
         print("Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.")
@@ -66,9 +71,9 @@ def bubble_sort(arr, reverse=False):
 def main():
     """Chương trình chính."""
     print("=== Thiết lập tài khoản ===")
-    user, pw = create_account()
+    user, hashed_pw = create_account()
     print("\n=== Đăng nhập ===")
-    login(user, pw)
+    login(user, hashed_pw)
 
     print("\n=== Các chức năng khác ===")
     print("Giao điểm:", intersection([1, 2, 3, 4, 5], [3, 4, 5, 6, 7]))

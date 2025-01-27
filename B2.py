@@ -1,111 +1,75 @@
-import re
-import time
-import hashlib
-from random import randint
-from getpass import getpass  # Để nhập mật khẩu an toàn hơn
+def bubble_sort(arr, reverse=False, key=None, inplace=False, verbose=False, stability=False):
+    """
+    Sắp xếp danh sách bằng thuật toán Bubble Sort.
+
+    Tham số:
+        arr (list): Danh sách cần sắp xếp.
+        reverse (bool): True nếu sắp xếp giảm dần, False nếu sắp xếp tăng dần.
+        key (callable, optional): Hàm để lấy giá trị so sánh từ phần tử.
+        inplace (bool): True nếu sắp xếp trên danh sách gốc, False để tạo bản sao.
+        verbose (bool): True nếu muốn in ra quá trình sắp xếp.
+        stability (bool): True nếu muốn đảm bảo tính ổn định của thuật toán.
+
+    Trả về:
+        list: Danh sách đã được sắp xếp.
+
+    Raises:
+        TypeError: Nếu tham số `arr` không phải là danh sách hoặc `key` không hợp lệ.
+        ValueError: Nếu danh sách chứa các phần tử không thể so sánh.
+    """
+    # Kiểm tra đầu vào
+    if not isinstance(arr, list):
+        raise TypeError("Tham số 'arr' phải là danh sách.")
+
+    if key is not None and not callable(key):
+        raise TypeError("Tham số 'key' phải là một callable (hàm).")
+
+    if not inplace:
+        arr = arr[:]  # Tạo bản sao nếu không muốn thay đổi danh sách gốc
+
+    key = key or (lambda x: x)  # Mặc định không dùng key
+
+    try:
+        n = len(arr)
+        for i in range(n - 1):
+            swapped = False
+            for j in range(n - i - 1):
+                # So sánh dựa trên key và hướng sắp xếp
+                if (key(arr[j]) > key(arr[j + 1])) ^ reverse:
+                    # Đảm bảo tính ổn định (không hoán đổi nếu hai phần tử bằng nhau và stability = True)
+                    if stability and key(arr[j]) == key(arr[j + 1]):
+                        continue
+                    arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                    swapped = True
+                    if verbose:
+                        print(f"Hoán đổi: {arr[j]} ↔ {arr[j+1]} -> {arr}")
+
+            if not swapped:  # Nếu không còn hoán đổi, kết thúc sớm
+                if verbose:
+                    print(f"Không còn hoán đổi ở vòng lặp {i + 1}. Kết thúc sớm!")
+                break
+
+        if verbose:
+            print(f"Danh sách đã được sắp xếp: {arr}")
+
+        return arr
+
+    except TypeError as e:
+        raise ValueError("Danh sách chứa phần tử không thể so sánh hoặc key không hợp lệ.") from e
 
 
-def hash_password(password, salt=""):
-    """Mã hóa mật khẩu với SHA-256 và salt."""
-    return hashlib.sha256((password + salt).encode()).hexdigest()
-
-
-def validate(username, password):
-    """Kiểm tra tính hợp lệ của tên tài khoản và mật khẩu."""
-    if len(username.split()) < 2:
-        print("Tên tài khoản phải bao gồm họ và tên.")
-        return False
-    if len(password) < 8:
-        print("Mật khẩu phải có ít nhất 8 ký tự.")
-        return False
-    if not re.search(r'[A-Z]', password):
-        print("Mật khẩu phải chứa ít nhất 1 chữ hoa.")
-        return False
-    if not re.search(r'[a-z]', password):
-        print("Mật khẩu phải chứa ít nhất 1 chữ thường.")
-        return False
-    if not re.search(r'\d', password):
-        print("Mật khẩu phải chứa ít nhất 1 chữ số.")
-        return False
-    if not re.search(r'[^A-Za-z0-9]', password):
-        print("Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt.")
-        return False
-    return True
-
-
-def create_account():
-    """Tạo tài khoản mới."""
-    while True:
-        username = input("Nhập tên tài khoản (phải có họ và tên): ").strip()
-        password = getpass("Nhập mật khẩu (ít nhất 8 ký tự, chứa ký tự đặc biệt): ").strip()
-        if validate(username, password):
-            confirm_password = getpass("Nhập lại mật khẩu để xác nhận: ").strip()
-            if password == confirm_password:
-                print("Tạo tài khoản thành công!")
-                salt = str(randint(1000, 9999))  # Tạo salt ngẫu nhiên
-                return username, hash_password(password, salt), salt
-            print("Mật khẩu không khớp. Vui lòng thử lại.")
-        else:
-            print("Tên tài khoản hoặc mật khẩu không hợp lệ. Vui lòng thử lại.")
-
-
-def login(username, hashed_password, salt):
-    """Đăng nhập với số lần thử giới hạn."""
-    attempts = 3
-    while attempts > 0:
-        input_username = input("Nhập tên tài khoản: ").strip()
-        input_password = hash_password(getpass("Nhập mật khẩu: ").strip(), salt)
-        if input_username == username and input_password == hashed_password:
-            print("Đăng nhập thành công!")
-            return True
-        attempts -= 1
-        print(f"Sai tài khoản hoặc mật khẩu. Còn {attempts} lần thử.")
-    print("Tài khoản bị khóa tạm thời. Vui lòng thử lại sau.")
-    return False
-
-
-def menu():
-    """Hiển thị menu chính."""
-    print("\n=== MENU CHÍNH ===")
-    print("1. Tìm giao điểm của 2 danh sách")
-    print("2. Kiểm tra số nguyên tố")
-    print("3. Xáo trộn danh sách")
-    print("4. Sắp xếp danh sách (Bubble Sort)")
-    print("5. Thoát")
-    return input("Chọn một chức năng (1-5): ").strip()
-
-
-def main():
-    """Chương trình chính."""
-    print("=== Thiết lập tài khoản ===")
-    user, hashed_pw, salt = create_account()
-
-    print("\n=== Đăng nhập ===")
-    if not login(user, hashed_pw, salt):
-        return
-
-    while True:
-        choice = menu()
-        if choice == "1":
-            list1 = list(map(int, input("Nhập danh sách 1 (cách nhau bởi dấu cách): ").split()))
-            list2 = list(map(int, input("Nhập danh sách 2 (cách nhau bởi dấu cách): ").split()))
-            print("Giao điểm:", sorted(set(list1) & set(list2)))
-        elif choice == "2":
-            n = int(input("Nhập số cần kiểm tra: "))
-            print(f"{n} {'là' if is_prime(n) else 'không phải là'} số nguyên tố.")
-        elif choice == "3":
-            lst = list(map(int, input("Nhập danh sách cần xáo trộn (cách nhau bởi dấu cách): ").split()))
-            print("Danh sách sau khi xáo trộn:", shuffle_list(lst))
-        elif choice == "4":
-            arr = list(map(int, input("Nhập danh sách cần sắp xếp (cách nhau bởi dấu cách): ").split()))
-            order = input("Sắp xếp tăng dần (t/n)? ").strip().lower() == "t"
-            print("Danh sách đã sắp xếp:", bubble_sort(arr, reverse=not order))
-        elif choice == "5":
-            print("Tạm biệt!")
-            break
-        else:
-            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
-
-
+# Minh họa sử dụng
 if __name__ == "__main__":
-    main()
+    test_cases = [
+        ([64, 34, 25, 12, 22, 11, 90], False, None, False, "Tăng dần"),
+        ([64, 34, 25, 12, 22, 11, 90], True, None, False, "Giảm dần"),
+        ([("a", 3), ("b", 1), ("c", 2)], False, lambda x: x[1], False, "Sắp xếp theo giá trị trong tuple"),
+        ([], False, None, False, "Danh sách rỗng"),
+        ([42], False, None, False, "Danh sách một phần tử"),
+        ([5, 5, 5, 5], False, None, False, "Danh sách giá trị giống nhau"),
+        ([3.1, 2.4, 5.6, 1.2], True, None, True, "Danh sách số thực giảm dần"),
+        ([("x", 2), ("y", 2), ("z", 1)], False, lambda x: x[1], True, "Sắp xếp với tính ổn định")
+    ]
+
+    for arr, reverse, key, verbose, desc in test_cases:
+        print(f"{desc}: {bubble_sort(arr, reverse=reverse, key=key, verbose=verbose, stability=True)}")

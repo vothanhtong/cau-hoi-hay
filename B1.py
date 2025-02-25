@@ -1,74 +1,125 @@
 from functools import cmp_to_key
+from typing import List, Callable, Any, Tuple
+import time
 
-def cocktail_shaker_sort(arr, reverse=False, key=None, inplace=False, verbose=False):
+def cocktail_shaker_sort(
+    arr: List[Any],
+    reverse: bool = False,
+    key: Callable[[Any], Any] | None = None,
+    inplace: bool = False,
+    verbose: bool = False,
+    stats: bool = False
+) -> List[Any]:
     """
     Sắp xếp danh sách bằng thuật toán Cocktail Shaker Sort (cải tiến Bubble Sort).
 
     Tham số:
         arr (list): Danh sách cần sắp xếp.
-        reverse (bool): True nếu sắp xếp giảm dần, False nếu tăng dần.
-        key (callable, optional): Hàm để lấy giá trị so sánh từ phần tử.
-        inplace (bool): True nếu sắp xếp trên danh sách gốc, False để tạo bản sao.
-        verbose (bool): True nếu muốn in ra quá trình sắp xếp.
+        reverse (bool): True để sắp xếp giảm dần, False để tăng dần (mặc định).
+        key (callable, optional): Hàm trả về giá trị so sánh từ phần tử.
+        inplace (bool): True để sửa đổi danh sách gốc, False để trả về bản sao.
+        verbose (bool): True để in chi tiết quá trình sắp xếp.
+        stats (bool): True để hiển thị thống kê hiệu suất (thời gian, số phép so sánh).
 
     Trả về:
         list: Danh sách đã được sắp xếp.
+
+    Ngoại lệ:
+        TypeError: Nếu arr không phải list hoặc key không phải callable.
+        ValueError: Nếu phần tử không thể so sánh với key.
     """
+    # Kiểm tra kiểu dữ liệu đầu vào
     if not isinstance(arr, list):
-        raise TypeError("Tham số 'arr' phải là danh sách.")
+        raise TypeError("Tham số 'arr' phải là một danh sách (list).")
     if key is not None and not callable(key):
         raise TypeError("Tham số 'key' phải là một callable (hàm).")
+
+    # Tạo bản sao nếu không sắp xếp tại chỗ
+    result = arr if inplace else arr.copy()
+    if not result:  # Danh sách rỗng thì trả về ngay
+        return result
+
+    # Xử lý hàm key
+    key_func = key if key else (lambda x: x)
     
-    if not inplace:
-        arr = arr[:]
-    
-    key = key or (lambda x: x)
-    
+    # Kiểm tra khả năng so sánh của các phần tử
     try:
-        _ = [key(x) for x in arr]
+        sample = [key_func(x) for x in result]
     except Exception as e:
-        raise ValueError("Danh sách chứa phần tử không thể so sánh hoặc key không hợp lệ.") from e
-    
-    left = 0
-    right = len(arr) - 1
+        raise ValueError("Phần tử trong danh sách không thể so sánh hoặc key không hợp lệ.") from e
+
+    # Khởi tạo biến
+    left, right = 0, len(result) - 1
     swapped = True
-    
+    comparisons = 0  # Đếm số phép so sánh
+    start_time = time.perf_counter() if stats else None
+
+    # Vòng lặp chính của Cocktail Sort
     while left < right and swapped:
         swapped = False
-        
+
         # Duyệt từ trái sang phải
         for i in range(left, right):
-            if (key(arr[i]) > key(arr[i + 1])) ^ reverse:
-                arr[i], arr[i + 1] = arr[i + 1], arr[i]
+            comparisons += 1
+            left_val, right_val = key_func(result[i]), key_func(result[i + 1])
+            if (left_val > right_val) ^ reverse:
+                result[i], result[i + 1] = result[i + 1], result[i]
                 swapped = True
                 if verbose:
-                    print(f"Hoán đổi: {arr[i]} ↔ {arr[i + 1]} -> {arr}")
-        
-        right -= 1  # Giảm phạm vi duyệt
-        
+                    print(f"Hoán đổi ( trái -> phải): {result[i]} ↔ {result[i + 1]} -> {result}")
+
+        right -= 1  # Thu hẹp phạm vi
+
         # Duyệt từ phải sang trái
         for i in range(right, left, -1):
-            if (key(arr[i - 1]) > key(arr[i])) ^ reverse:
-                arr[i], arr[i - 1] = arr[i - 1], arr[i]
+            comparisons += 1
+            left_val, right_val = key_func(result[i - 1]), key_func(result[i])
+            if (left_val > right_val) ^ reverse:
+                result[i], result[i - 1] = result[i - 1], result[i]
                 swapped = True
                 if verbose:
-                    print(f"Hoán đổi: {arr[i]} ↔ {arr[i - 1]} -> {arr}")
-        
-        left += 1  # Tăng phạm vi duyệt
-    
-    if verbose:
-        print(f"Danh sách đã được sắp xếp: {arr}")
-    
-    return arr
+                    print(f"Hoán đổi (phải -> trái): {result[i]} ↔ {result[i - 1]} -> {result}")
 
-# Minh họa sử dụng
-if __name__ == "__main__":
-    test_cases = [
-        ([64, 34, 25, 12, 22, 11, 90], False, None, False, "Tăng dần"),
-        ([64, 34, 25, 12, 22, 11, 90], True, None, False, "Giảm dần"),
-        ([("a", 3), ("b", 1), ("c", 2)], False, lambda x: x[1], False, "Sắp xếp theo giá trị trong tuple"),
-        ([3.1, 2.4, 5.6, 1.2], True, None, True, "Danh sách số thực giảm dần"),
-    ]
+        left += 1  # Thu hẹp phạm vi
+
+    # Hiển thị kết quả và thống kê
+    if verbose:
+        print(f"Kết quả sắp xếp: {result}")
     
-    for arr, reverse, key, verbose, desc in test_cases:
-        print(f"{desc}: {cocktail_shaker_sort(arr, reverse=reverse, key=key, verbose=verbose)}")
+    if stats:
+        elapsed_time = time.perf_counter() - start_time
+        print(f"Thống kê: {comparisons} phép so sánh, {elapsed_time:.6f} giây")
+
+    return result
+
+# Minh họa sử dụng với các trường hợp kiểm tra
+if __name__ == "__main__":
+    # Danh sách kiểm tra với mô tả
+    test_cases = [
+        ([64, 34, 25, 12, 22, 11, 90], False, None, False, True, False, "Sắp xếp tăng dần"),
+        ([64, 34, 25, 12, 22, 11, 90], True, None, False, True, False, "Sắp xếp giảm dần"),
+        ([("a", 3), ("b", 1), ("c", 2)], False, lambda x: x[1], False, True, False, "Sắp xếp theo giá trị tuple"),
+        ([3.1, 2.4, 5.6, 1.2], True, None, True, True, True, "Số thực giảm dần, tại chỗ"),
+        ([], False, None, False, True, False, "Danh sách rỗng"),
+        ([1], True, None, False, True, False, "Danh sách 1 phần tử"),
+        (["z", "a", "c", "b"], False, str.lower, False, True, True, "Chuỗi theo thứ tự chữ cái"),
+    ]
+
+    # Chạy từng trường hợp
+    for arr, reverse, key, inplace, verbose, stats, desc in test_cases:
+        print(f"\n=== {desc} ===")
+        print(f"Trước: {arr}")
+        try:
+            sorted_arr = cocktail_shaker_sort(
+                arr, reverse=reverse, key=key, inplace=inplace, verbose=verbose, stats=stats
+            )
+            print(f"Sau: {sorted_arr}")
+        except (TypeError, ValueError) as e:
+            print(f"Lỗi: {e}")
+
+    # Trường hợp lỗi mẫu
+    print("\n=== Trường hợp lỗi ===")
+    try:
+        cocktail_shaker_sort("not a list")  # Truyền chuỗi thay vì danh sách
+    except TypeError as e:
+        print(f"Lỗi: {e}")

@@ -1,13 +1,11 @@
 def bubble_sort(arr):
-    n = len(arr)
-    for i in range(n):
-        swapped = False  # Kiểm tra có hoán đổi không
-        # Duyệt từ 0 đến n-i-1
-        for j in range(0, n - i - 1):
-            if arr[j] > arr[j + 1]:  # So sánh 2 phần tử liền kề
-                arr[j], arr[j + 1] = arr[j + 1], arr[j]  # Hoán đổi
-                swapped = True
-        # In danh sách sau mỗi bước (tùy chọn)
-        print(f"Bước {i + 1}: {arr}")
-        if not swapped:  # Nếu không có hoán đổi, dừng thuật toán
-            break
+    n = len(arr)  # Lấy độ dài mảng
+    for i in range(n):  # Vòng lặp cho mỗi bước sắp xếp
+        swapped = False  # Biến kiểm tra có hoán đổi không
+        for j in range(0, n - i - 1):  # Vòng lặp so sánh các cặp phần tử
+            if arr[j] > arr[j + 1]:  # Nếu phần tử trước lớn hơn phần tử sau
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]  # Hoán đổi vị trí
+                swapped = True  # Đánh dấu đã hoán đổi
+        print(f"Bước {i + 1}: {arr}")  # In mảng sau mỗi bước (tùy chọn)
+        if not swapped:  # Nếu không có hoán đổi, mảng đã sắp xếp xong
+            break  # Thoát khỏi vòng lặp

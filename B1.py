@@ -39,7 +39,7 @@ def cocktail_shaker_sort(
         raise TypeError("Tham số 'cmp' phải là một callable (hàm).")
 
     # Tạo bản sao nếu không sắp xếp tại chỗ
-    result = arr if inplace else arr.()
+    result = arr if inplace else arr()
     if not result:  # Danh sách rỗng thì trả về ngay
         return result
 

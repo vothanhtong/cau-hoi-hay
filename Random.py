@@ -1,7 +1,7 @@
 import random
 
-# Danh sách các tên ban đầu
-names = ["Alice", "Bob", "Charlie", "David", "Eva", "Frank", "Grace", "Hannah", "Isaac", "Jack"]
+# Danh sách các tên ban đầu (sẽ được người dùng nhập)
+names = []
 
 # Hàm để tạo tên ngẫu nhiên
 def generate_random_names(num_names):
@@ -49,11 +49,14 @@ def menu():
             try:
                 num = int(input("Nhập số lượng tên bạn muốn tạo: "))
                 if num > 0:
-                    random_names = generate_random_names(num)
-                    print("Các tên ngẫu nhiên:", random_names)
-                    save_option = input("Bạn có muốn lưu danh sách này vào tệp không? (y/n): ").lower()
-                    if save_option == "y":
-                        save_to_file(random_names)
+                    if len(names) == 0:
+                        print("Danh sách tên đang trống. Vui lòng thêm tên trước khi tạo danh sách ngẫu nhiên.")
+                    else:
+                        random_names = generate_random_names(num)
+                        print("Các tên ngẫu nhiên:", random_names)
+                        save_option = input("Bạn có muốn lưu danh sách này vào tệp không? (y/n): ").lower()
+                        if save_option == "y":
+                            save_to_file(random_names)
                 else:
                     print("Số lượng phải lớn hơn 0.")
             except ValueError:

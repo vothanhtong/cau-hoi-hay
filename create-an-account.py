@@ -2,32 +2,40 @@ import re
 import bcrypt
 import json
 import time
+import logging
 from getpass import getpass
+from contextlib import contextmanager
+
+# Cấu hình logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Hằng số
 MAX_ATTEMPTS = 3
 LOCK_DURATION = 30  # Thời gian khóa tài khoản (giây)
 DATABASE_FILE = "users_db.json"
+ADMIN_KEY = bcrypt.hashpw(b"admin123", bcrypt.gensalt()).decode('utf-8')  # Khóa quản trị viên đã mã hóa
+
+# Quản lý mở/đóng tệp JSON
+@contextmanager
+def open_db():
+    try:
+        with open(DATABASE_FILE, "r") as file:
+            yield json.load(file)
+    except FileNotFoundError:
+        yield {}
 
 # Load dữ liệu từ tệp JSON
 def load_users():
-    try:
-        with open(DATABASE_FILE, "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {}
+    with open_db() as db:
+        return db
 
 # Lưu dữ liệu vào tệp JSON
 def save_users(users):
     with open(DATABASE_FILE, "w") as file:
-        json.dump(users, file)
+        json.dump(users, file, indent=4)
 
-# Dữ liệu người dùng
-users_db = load_users()
-login_attempts = {}
-
+# Kiểm tra tính hợp lệ của mật khẩu
 def validate_password(password):
-    """Kiểm tra tính hợp lệ của mật khẩu và gợi ý các yêu cầu chưa đạt."""
     errors = []
     if len(password) < 8:
         errors.append("Mật khẩu phải có ít nhất 8 ký tự.")
@@ -41,67 +49,65 @@ def validate_password(password):
         errors.append("Mật khẩu phải chứa ít nhất một ký tự đặc biệt.")
     return errors
 
+# Tạo tài khoản mới
 def create_account():
-    """Tạo tài khoản mới."""
     while True:
-        username = input("Nhập tên tài khoản (phải có họ và tên): ").strip()
+        username = input("Nhập tên tài khoản: ").strip()
         if username in users_db:
-            print("Tên tài khoản đã tồn tại. Vui lòng thử tên khác.")
+            logging.warning("Tên tài khoản đã tồn tại. Vui lòng thử tên khác.")
             continue
         
         password = getpass("Nhập mật khẩu: ").strip()
         errors = validate_password(password)
         if errors:
-            print("Mật khẩu không hợp lệ:")
+            logging.warning("Mật khẩu không hợp lệ:")
             for error in errors:
-                print(f"- {error}")
+                logging.warning(f"- {error}")
             continue
         
         confirm_password = getpass("Nhập lại mật khẩu để xác nhận: ").strip()
         if password != confirm_password:
-            print("Mật khẩu không khớp. Vui lòng thử lại.")
+            logging.warning("Mật khẩu không khớp. Vui lòng thử lại.")
         else:
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             users_db[username] = {"password": hashed_password, "locked_until": 0}
             save_users(users_db)
-            print("Tạo tài khoản thành công!")
+            logging.info("Tạo tài khoản thành công!")
             break
 
+# Đăng nhập
 def login():
-    """Đăng nhập vào hệ thống."""
     username = input("Nhập tên tài khoản: ").strip()
     if username not in users_db:
-        print("Tài khoản không tồn tại.")
+        logging.warning("Tài khoản không tồn tại.")
         return False
 
     user_data = users_db[username]
     if time.time() < user_data["locked_until"]:
         remaining_time = int(user_data["locked_until"] - time.time())
-        print(f"Tài khoản đang bị khóa. Vui lòng thử lại sau {remaining_time} giây.")
+        logging.warning(f"Tài khoản đang bị khóa. Vui lòng thử lại sau {remaining_time} giây.")
         return False
 
-    attempts = login_attempts.get(username, 0)
+    attempts = 0
     while attempts < MAX_ATTEMPTS:
         password = getpass("Nhập mật khẩu: ").strip()
         if bcrypt.checkpw(password.encode('utf-8'), user_data["password"].encode('utf-8')):
-            print("Đăng nhập thành công!")
-            login_attempts.pop(username, None)
+            logging.info("Đăng nhập thành công!")
             return True
         else:
             attempts += 1
-            login_attempts[username] = attempts
-            print(f"Sai mật khẩu. Bạn còn {MAX_ATTEMPTS - attempts} lần thử.")
+            logging.warning(f"Sai mật khẩu. Bạn còn {MAX_ATTEMPTS - attempts} lần thử.")
     
     users_db[username]["locked_until"] = time.time() + LOCK_DURATION
     save_users(users_db)
-    print("Bạn đã vượt quá số lần thử. Tài khoản bị khóa tạm thời.")
+    logging.warning("Bạn đã vượt quá số lần thử. Tài khoản bị khóa tạm thời.")
     return False
 
+# Đổi mật khẩu
 def change_password():
-    """Đổi mật khẩu cho tài khoản đã đăng nhập."""
     username = input("Nhập tên tài khoản của bạn: ").strip()
     if username not in users_db:
-        print("Tài khoản không tồn tại.")
+        logging.warning("Tài khoản không tồn tại.")
         return
 
     old_password = getpass("Nhập mật khẩu cũ: ").strip()
@@ -109,46 +115,51 @@ def change_password():
         new_password = getpass("Nhập mật khẩu mới: ").strip()
         errors = validate_password(new_password)
         if errors:
-            print("Mật khẩu mới không hợp lệ:")
+            logging.warning("Mật khẩu mới không hợp lệ:")
             for error in errors:
-                print(f"- {error}")
+                logging.warning(f"- {error}")
             return
         
         confirm_password = getpass("Nhập lại mật khẩu mới để xác nhận: ").strip()
         if new_password == confirm_password:
             users_db[username]["password"] = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
             save_users(users_db)
-            print("Đổi mật khẩu thành công!")
+            logging.info("Đổi mật khẩu thành công!")
         else:
-            print("Mật khẩu mới không khớp.")
+            logging.warning("Mật khẩu mới không khớp.")
     else:
-        print("Sai mật khẩu cũ.")
+        logging.warning("Sai mật khẩu cũ.")
 
-def show_users(admin_key):
-    """Hiển thị danh sách tài khoản (chỉ quản trị viên mới có quyền)."""
-    if admin_key == "admin123":
-        print("\n=== Danh sách tài khoản ===")
+# Hiển thị danh sách tài khoản (chỉ quản trị viên)
+def show_users():
+    admin_key = getpass("Nhập khóa quản trị viên: ").strip()
+    if bcrypt.checkpw(admin_key.encode('utf-8'), ADMIN_KEY.encode('utf-8')):
+        logging.info("\n=== Danh sách tài khoản ===")
         for username in users_db.keys():
-            print(f"- {username}")
-        print("==========================\n")
+            logging.info(f"- {username}")
+        logging.info("==========================\n")
     else:
-        print("Bạn không có quyền truy cập chức năng này.")
+        logging.warning("Bạn không có quyền truy cập chức năng này.")
 
-def delete_account(admin_key):
-    """Xóa tài khoản (chỉ quản trị viên mới có quyền)."""
-    if admin_key == "admin123":
+# Xóa tài khoản (chỉ quản trị viên)
+def delete_account():
+    admin_key = getpass("Nhập khóa quản trị viên: ").strip()
+    if bcrypt.checkpw(admin_key.encode('utf-8'), ADMIN_KEY.encode('utf-8')):
         username = input("Nhập tên tài khoản cần xóa: ").strip()
         if username in users_db:
             del users_db[username]
             save_users(users_db)
-            print(f"Đã xóa tài khoản: {username}")
+            logging.info(f"Đã xóa tài khoản: {username}")
         else:
-            print("Tài khoản không tồn tại.")
+            logging.warning("Tài khoản không tồn tại.")
     else:
-        print("Bạn không có quyền thực hiện chức năng này.")
+        logging.warning("Bạn không có quyền thực hiện chức năng này.")
 
+# Chương trình chính
 def main():
-    """Chương trình chính."""
+    global users_db
+    users_db = load_users()
+
     while True:
         print("\n=== Hệ thống quản lý tài khoản ===")
         print("1. Tạo tài khoản mới")
@@ -166,16 +177,14 @@ def main():
         elif choice == "3":
             change_password()
         elif choice == "4":
-            admin_key = getpass("Nhập khóa quản trị viên: ").strip()
-            show_users(admin_key)
+            show_users()
         elif choice == "5":
-            admin_key = getpass("Nhập khóa quản trị viên: ").strip()
-            delete_account(admin_key)
+            delete_account()
         elif choice == "6":
-            print("Cảm ơn bạn đã sử dụng hệ thống. Tạm biệt!")
+            logging.info("Cảm ơn bạn đã sử dụng hệ thống. Tạm biệt!")
             break
         else:
-            print("Lựa chọn không hợp lệ. Vui lòng thử lại.")
+            logging.warning("Lựa chọn không hợp lệ. Vui lòng thử lại.")
 
 if __name__ == "__main__":
     main()

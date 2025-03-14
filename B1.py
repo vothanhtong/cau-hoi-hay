@@ -39,7 +39,7 @@ def cocktail_shaker_sort(
         raise TypeError("Tham số 'cmp' phải là một callable (hàm).")
 
     # Tạo bản sao nếu không sắp xếp tại chỗ
-    result = arr if inplace else arr()
+    result = arr if inplace else arr[:]
     if not result:  # Danh sách rỗng thì trả về ngay
         return result
 
@@ -132,16 +132,3 @@ if __name__ == "__main__":
         cocktail_shaker_sort("not a list")  # Truyền chuỗi thay vì danh sách
     except TypeError as e:
         print(f"Lỗi: {e}")
-
-
-# sorted_arr = cocktail_shaker_sort(arr, cmp=lambda a, b: (a > b) - (a < b))
-# Sắp xếp giảm dần với key:
-
-
-
-# sorted_arr = cocktail_shaker_sort(arr, key=lambda x: x[1], reverse=True)
-# Sắp xếp tại chỗ với thống kê:
-
-
-
-# sorted_arr = cocktail_shaker_sort(arr, inplace=True, stats=True)

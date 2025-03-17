@@ -1,7 +1,7 @@
 import random
 
 # Danh sách các tên ban đầu (sẽ được người dùng nhập)
-names = []
+names = set()
 
 # Hàm để tạo tên ngẫu nhiên
 def generate_random_names(num_names):
@@ -16,20 +16,39 @@ def display_names():
 
 # Hàm thêm tên mới vào danh sách
 def add_names():
-    new_name = input("Nhập tên bạn muốn thêm (nhập 'stop' để dừng): ")
-    while new_name.lower() != "stop":
+    while True:
+        new_name = input("Nhập tên bạn muốn thêm (nhập 'stop' để dừng): ").strip()
+        if new_name.lower() == "stop":
+            break
         if new_name and new_name not in names:
-            names.append(new_name)
+            names.add(new_name)
             print(f"Đã thêm tên: {new_name}")
         else:
             print("Tên không hợp lệ hoặc đã tồn tại.")
-        new_name = input("Nhập tên tiếp theo (nhập 'stop' để dừng): ")
 
 # Lưu danh sách tên ngẫu nhiên vào tệp
 def save_to_file(random_names):
     with open("random_names.txt", "w") as file:
         file.write("\n".join(random_names))
     print("Danh sách tên ngẫu nhiên đã được lưu vào tệp 'random_names.txt'.")
+
+# Hàm xử lý việc tạo danh sách tên ngẫu nhiên
+def handle_random_names():
+    try:
+        num = int(input("Nhập số lượng tên bạn muốn tạo: "))
+        if num > 0:
+            if not names:
+                print("Danh sách tên đang trống. Vui lòng thêm tên trước khi tạo danh sách ngẫu nhiên.")
+            else:
+                random_names = generate_random_names(num)
+                print("Các tên ngẫu nhiên:", random_names)
+                save_option = input("Bạn có muốn lưu danh sách này vào tệp không? (y/n): ").lower()
+                if save_option == "y":
+                    save_to_file(random_names)
+        else:
+            print("Số lượng phải lớn hơn 0.")
+    except ValueError:
+        print("Vui lòng nhập một số nguyên hợp lệ.")
 
 # Menu chức năng
 def menu():
@@ -39,28 +58,14 @@ def menu():
         print("2. Thêm tên mới vào danh sách")
         print("3. Tạo danh sách tên ngẫu nhiên")
         print("4. Thoát")
-        choice = input("Nhập lựa chọn của bạn: ")
+        choice = input("Nhập lựa chọn của bạn: ").strip()
 
         if choice == "1":
             display_names()
         elif choice == "2":
             add_names()
         elif choice == "3":
-            try:
-                num = int(input("Nhập số lượng tên bạn muốn tạo: "))
-                if num > 0:
-                    if len(names) == 0:
-                        print("Danh sách tên đang trống. Vui lòng thêm tên trước khi tạo danh sách ngẫu nhiên.")
-                    else:
-                        random_names = generate_random_names(num)
-                        print("Các tên ngẫu nhiên:", random_names)
-                        save_option = input("Bạn có muốn lưu danh sách này vào tệp không? (y/n): ").lower()
-                        if save_option == "y":
-                            save_to_file(random_names)
-                else:
-                    print("Số lượng phải lớn hơn 0.")
-            except ValueError:
-                print("Vui lòng nhập một số nguyên hợp lệ.")
+            handle_random_names()
         elif choice == "4":
             print("Tạm biệt!")
             break
@@ -68,4 +73,5 @@ def menu():
             print("Lựa chọn không hợp lệ, vui lòng thử lại.")
 
 # Chạy chương trình
-menu()
+if __name__ == "__main__":
+    menu()
